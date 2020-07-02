@@ -13,7 +13,6 @@ import random
 import pandas as pd
 import timeit
 from mpl_toolkits.mplot3d import Axes3D
-print(pd.__version__)
 trainingData={'b':[[1,4],[3,9],[6,0]],'r':[[8,4],[5,7],[1,1]]}
 newData=[4,4]
 def k_nearest_neighbour(data,prediction,k=3):
@@ -26,12 +25,12 @@ def k_nearest_neighbour(data,prediction,k=3):
             distances.append([distance,colour])
         votes = [i[1] for i in sorted(distances)[:k]]
         result = Counter(votes).most_common(1)[0][0]
-            
     return result
 
 def openData(name):
         if name.endswith("-2d.train.csv"):
-            dataFrame= pd.read_csv(name,header = -1,index_col=False)
+            dataFrame= pd.read_csv(name,header = None,index_col=False)
+            print(dataFrame)
             for i in range(dataFrame.shape[0]):
                 if dataFrame.at[i,0] == 1:
                     plt.scatter(dataFrame.at[i,1],dataFrame.at[i,2],color='b')
@@ -39,7 +38,7 @@ def openData(name):
                     plt.scatter(dataFrame.at[i,1],dataFrame.at[i,2],color='r')
             plt.show()
         elif name.endswith("-3d.train.csv"):
-            dataFrame=pd.read_csv(name, header = -1,index_col=False)
+            dataFrame=pd.read_csv(name, header = None,index_col=False)
             fig = plt.figure()
             ax = fig.add_subplot(111,projection='3d')
             for i in range(dataFrame.shape[0]):
@@ -49,9 +48,9 @@ def openData(name):
                     ax.scatter(dataFrame.at[i,1],dataFrame.at[i,2],dataFrame.at[i,3],c = 'r',marker='^')
             plt.show()
         elif name.endswith("-4d.train.csv"):
-            dataFrame= pd.read_csv(name, header=-1,index_col = False)
+            dataFrame= pd.read_csv(name, header=None,index_col = False)
         elif name.endswith("-10d.train.csv"):
-            dataFrame = pd.read_csv(name, header =-1,index_col=False)
+            dataFrame = pd.read_csv(name, header =None,index_col=False)
         return dataFrame
         
 
@@ -72,6 +71,6 @@ def kNearestNeighbours(name,k=8):
             f = np.sign(sum(1))
 
             
-            
-k_nearest_neighbour(trainingData,newData,k=3)
+openData('data/bananas-1-2d.train.csv')            
+#k_nearest_neighbour(trainingData,newData,k=3)
 #kNearestNeighbours('bananas-1-2d.train.csv')
