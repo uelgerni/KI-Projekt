@@ -20,6 +20,7 @@ def pandasPlotter(filename):
 
 '''
 reads csv filename from data directory and returns as dataframe
+currently neither pandasplotter nor reader are needed because we use numpy
 '''
 
 
@@ -31,17 +32,24 @@ def pandasReader(filename):
     dataframe.columns = names
     return dataframe
 
-
+"""
+reads filename from directory
+"""
 def numpyReader(filename):
     return np.genfromtxt('./data/{}'.format(filename), delimiter=',', dtype=float)
 
-
+"""
+returns distance from points without using the "colour flag"
+"""
 def distance(p1, p2):
     usefulp1 = p1[1:]
     usefulp2 = p2[1:]
     return np.linalg.norm(usefulp1 - usefulp2)
 
-
+"""
+checks which one is closer to pivot, 
+we plan on using this for nn/knn search in kd tree if there could be closer points in neighbouring leaves
+"""
 def checkNeighbour(pivot, p1, p2):
     # if either one doesnt exist return the other, if both dont exist return None
     if p1 is None:
