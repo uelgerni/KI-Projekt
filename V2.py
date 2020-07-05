@@ -25,6 +25,10 @@ reads csv filename from data directory and returns as dataframe
 
 def pandasReader(filename):
     dataframe = pd.read_csv('./data/{}'.format(filename), header=None)
+    names = ["Colour"]
+    for i in range(dataframe.shape[1]-1):
+        names.append("dim{}".format(i+1))
+    dataframe.columns = names
     return dataframe
 
 
@@ -33,7 +37,9 @@ def numpyReader(filename):
 
 
 def distance(p1, p2):
-    return np.linalg.norm(p1 - p2)
+    usefulp1 = p1[1:]
+    usefulp2 = p2[1:]
+    return np.linalg.norm(usefulp1 - usefulp2)
 
 
 def checkNeighbour(pivot, p1, p2):
@@ -44,4 +50,3 @@ def checkNeighbour(pivot, p1, p2):
         return p1
     # checks whether p1 is actually closer or only in the nearest leaf and returns the closer one
     return p1 if distance(pivot, p1) < distance(pivot, p2) else p2
-
