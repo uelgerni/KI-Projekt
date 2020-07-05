@@ -58,10 +58,11 @@ class kdTree:
         boundingBox = self.computeBB(data)
         node = self.Node(bb=boundingBox, currentAxis=axis, parent=parent)
         node.loc = splitPoint
-        # if still too big -> split again
 
+        # we're using this split either way
         leftHalf = sortedData[:half]
         rightHalf = sortedData[half:]
+        # if still too big -> split again
         if half >= leafsize:
             node.left = self.buildTree(leftHalf, depth=depth + 1, leafsize=leafsize, parent=self)
             node.right = self.buildTree(rightHalf, depth=depth + 1, leafsize=leafsize, parent=self)
@@ -76,6 +77,7 @@ class kdTree:
             node.right.data = rightHalf
         return node
 
+    # computes axes aligned hyperrectangle around date
     def computeBB(self, data):
         bb = np.zeros((2, data.shape[1] - 1))
         bb[0, :] = data[:, 1:].min(axis=0)
@@ -84,6 +86,7 @@ class kdTree:
 
 
 def nn(node, pivot):
+    # go to the leaf where the pivot would be
     while not node.isLeaf():
         axis = node.currentAxis
         print("Axis:", axis)
@@ -93,9 +96,11 @@ def nn(node, pivot):
         else:
             return nn(node.right, pivot)
 
+    # init mindist as inf so all other points are closer
     mindist = float('inf')
     minPoint = None
 
+    # check for closest point in leaf
     for dataPoint in node.data:
         dist = distance(dataPoint, pivot)
         if dist < mindist:
@@ -103,11 +108,12 @@ def nn(node, pivot):
             minPoint = dataPoint
     if intersects(minPoint, mindist, node.bb):
         print(intersects(minPoint, mindist, node.bb))
-
+    # todo: if intersects: check neighbouring leafs
     return minPoint, mindist
 
 
 def knn(self, point, k):
+    # todo everything
     pass
 
 
