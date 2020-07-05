@@ -36,26 +36,6 @@ def distance(p1, p2):
     return np.linalg.norm(p1 - p2)
 
 
-# create kd tree as dict/binary tree-like with only one node per leaf
-def create_tree(points, depth=0):
-    dim = points.shape[1]
-    n = len(points)
-    # edge case of no points
-    if n == 0:
-        return None
-    axis = depth % dim  # cycle through all k dimensions
-    points[points[:, axis].argsort()]  # sort by column axis
-    half = n // 2
-    return {
-        'point': points[half],
-        'left': create_tree(points[:half], depth + 1),
-        'right': create_tree(points[half + 1:], depth + 1)
-    }
-
-
-
-
-
 def checkNeighbour(pivot, p1, p2):
     # if either one doesnt exist return the other, if both dont exist return None
     if p1 is None:
