@@ -220,7 +220,7 @@ head = kdTree(points, leafsize=64).kdNode
 x = points[:, 1]
 y = points[:, 2]
 
-point = (1, 0.5, 0.3)
+point = (1, 0.1, 0.3)
 t3 = time.time()
 dah = knn(head, point, 20)
 print(dah[:, 1:])

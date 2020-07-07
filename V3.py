@@ -56,7 +56,7 @@ def knn(point, data, k):
 
 def sign(neighbours):
     signum = sum(neighbours[0][:, 0])
-    return 1 if signum == 0 else signum/abs(signum)
+    return 1 if signum == 0 else signum / abs(signum)
 
 
 def randomlySplitData(data, l):
@@ -71,7 +71,6 @@ def randomlySplitData(data, l):
 
 def createD_i(listOfData, i):
     dim = len(listOfData[0][0])
-    print(dim)
     returnArray = np.ndarray((0, dim))
     for k in range(len(listOfData)):
         if k != i:
@@ -86,18 +85,27 @@ def classifyPoint(point, data, k):
     return point, classification
 
 
+def classifyForLoop(sample, data, k):
+    resultArray = np.zeros((sample.shape[0], 2))
+    for point in sample:
+        yield classifyPoint(point, data, k)
+
+
+def classifyListComp(sample, data, k):
+    resultList = [classifyPoint(point, data, k) for point in sample]
+    return resultList
+
+
 data = numpyReader('bananas-1-2d.train.csv')
-#plotData = pandasPlotter('bananas-1-2d.train.csv')
-#plotData.plot.scatter(x='dim1', y='dim2', c='Colour')
-#plt.show()
-point = (1, 0.823, 0.495)
+
+
+# plotData = pandasPlotter('bananas-1-2d.train.csv')
+# plotData.plot.scatter(x='dim1', y='dim2', c='Colour')
+# plt.show()
+point = (1, 0.1, 0.2)
 # data = numpyReader('bananas-1-4d.train.csv')
 # data = numpyReader('toy-10d.train.csv')
-
-split = randomlySplitData(data, 5)
-D_i = createD_i(split, 0)
-print(classifyPoint(point, data, 50))
-kRange = np.arange(1, 101)
-
-t2 = time.time()
-print(t2 - t1)
+t1 = time.time()
+nnn = knn(point, data, 5)
+print(nnn)
+print(time.time()-t1)
