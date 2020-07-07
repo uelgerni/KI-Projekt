@@ -42,7 +42,7 @@ import time
 t1 = time.time()
 
 
-def knn(point, data, k):
+def listKNN(point, data, k):
     n, dim = data.shape
     distances = np.zeros(n)
     for key, entry in enumerate(data):
@@ -80,7 +80,7 @@ def createD_i(listOfData, i):
 
 
 def classifyPoint(point, data, k):
-    kNN = knn(point, data, k)
+    kNN = listKNN(point, data, k)
     classification = sign(kNN)
     return point, classification
 
@@ -106,6 +106,6 @@ point = (1, 0.1, 0.2)
 # data = numpyReader('bananas-1-4d.train.csv')
 # data = numpyReader('toy-10d.train.csv')
 t1 = time.time()
-nnn = knn(point, data, 5)
+nnn = listKNN(point, data, 5)
 print(nnn)
 print(time.time()-t1)

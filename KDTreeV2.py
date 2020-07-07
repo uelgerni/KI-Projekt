@@ -4,19 +4,7 @@ from collections import namedtuple
 import time
 from math import inf
 import heapq
-import matplotlib.pyplot as plt
-
-
-# simple function that returns true if the hypersphere around a point intersects the hyperrectangle
-def intersects(point, radius, bb):
-    usefulPoint = point[1:]
-    minVal = bb[0, :]
-    maxVal = bb[1, :]
-    if any(maxVal < (usefulPoint - radius)) or any(minVal > (usefulPoint + radius)):
-        return False
-    maxIntersect = maxVal < usefulPoint + radius
-    minIntersect = minVal > usefulPoint - radius
-    return any(maxIntersect) or any(minIntersect)
+from helperMethods import distance, numpyReader, intersects
 
 
 # computes minimum boundingbox for data
@@ -28,12 +16,6 @@ def computeBB(data):
     return bb
 
 
-def distance(p1, p2):
-    usefulP1 = p1[1:]
-    usefulP2 = p2[1:]
-    return np.linalg.norm(usefulP1 - usefulP2)
-
-
 # just a simple container for our nodes
 class Node(namedtuple('Node', 'value left right boundingBox')):
     def __repr__(self):
@@ -41,10 +23,6 @@ class Node(namedtuple('Node', 'value left right boundingBox')):
 
     def isLeaf(self):
         return self.left is None and self.right is None
-
-
-def numpyReader(filename):
-    return np.genfromtxt('./data/{}'.format(filename), delimiter=',', dtype=float)
 
 
 def kdTree(data, depth=0, boundingBox=None):
@@ -94,7 +72,6 @@ def knn(root, point, k, axis=0, results=None):
 
     # only go into trees where closer points could be
     if not intersects(point, maxDistance, root.boundingBox):
-        print("skipped tree")
         return
     dist = distance(root.value, point)
     if dist < maxDistance:
@@ -112,6 +89,11 @@ def knn(root, point, k, axis=0, results=None):
         knn(root=root.left, point=point, k=k, axis=axis + 1, results=results)
 
     return results
+
+
+'''
+uses heapq instead of sorting all the time, not really faster
+'''
 
 
 def knn2(root, point, k, axis=0, results=None):
@@ -149,16 +131,3 @@ def knn2(root, point, k, axis=0, results=None):
 
     return results
 
-
-data = numpyReader('bananas-1-2d.train.csv')
-point = np.array((1, 0.1, 0.2))
-
-tenDPoint1 = np.array((1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5))
-tenDPoint2 = np.array((1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
-
-tree = kdTree(data)
-# print(distance(tree.value, point))
-t1 = time.time()
-knearest = knn2(tree, point, 5)
-print(-np.array(knearest)[:, 0])
-print(time.time() - t1)
