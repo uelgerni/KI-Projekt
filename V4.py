@@ -1,6 +1,6 @@
 import numpy as np
 from KDTreeV2 import kdTree, knn
-
+from helperMethods import dataBeautifier
 '''
 calculates the "average sign" of data, according to what we should do
 '''
@@ -50,14 +50,14 @@ returns the point and the classification € {-1,1}
 '''
 
 
-def dataBeautifier(data):
-    return np.array(np.array(data)[:, 1].tolist()), np.array(np.array(data)[:, 0].tolist())
+
 
 
 def classifyPoint(point, tree, k):
     kNN = knn(tree, point, k)
     # some data strange beautification:
     kNN = dataBeautifier(kNN)[0]
+    #print(kNN)
     classification = sign(kNN)
     return classification, point
 

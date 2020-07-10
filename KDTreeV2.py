@@ -4,15 +4,30 @@ from collections import namedtuple
 import time
 from math import inf
 import heapq
-from helperMethods import distance, numpyReader, intersects
+from helperMethods import distance, numpyReader
+
+
+# simple function that returns true if the hypersphere around a point intersects the hyperrectangle
+# also returns false if the hypersphere is totally outside of the hyperrectangle
+def intersects(point, radius, bb):
+    usefulPoint = point[1:-1]
+    minVal = bb[0, :]
+    maxVal = bb[1, :]
+    # if fully outside return false
+    if any(maxVal < (usefulPoint - radius)) or any(minVal > (usefulPoint + radius)):
+        return False
+    # else check if intersects
+    maxIntersect = maxVal < usefulPoint + radius
+    minIntersect = minVal > usefulPoint - radius
+    return any(maxIntersect) or any(minIntersect)
 
 
 # computes minimum boundingbox for data
 # where boundingbox is an axes aligned hyperrectangle defined by its two opposing outmost vertices
 def computeBB(data):
-    bb = np.zeros((2, data.shape[1] - 1))
-    bb[0, :] = data[:, 1:].min(axis=0)
-    bb[1, :] = data[:, 1:].max(axis=0)
+    bb = np.zeros((2, data.shape[1] - 2))
+    bb[0, :] = data[:, 1:-1].min(axis=0)
+    bb[1, :] = data[:, 1:-1].max(axis=0)
     return bb
 
 
@@ -30,7 +45,7 @@ def kdTree(data, depth=0, boundingBox=None):
     n = len(data)
     if n > 1:
         half = n // 2
-        dim = len(data[0]) - 1
+        dim = len(data[0]) - 2  # flag and key
         axis = depth % dim
         sortedData = data[data[:, axis + 1].argsort(kind='mergesort')]
         value = sortedData[half]
@@ -55,7 +70,7 @@ def kdTree(data, depth=0, boundingBox=None):
 
 
 def knn(root, point, k, axis=0, results=None):
-    dim = len(point) - 1  # ignore classification flag
+    dim = len(point) - 2  # ignore classification flag and key
     axis = axis % dim  # cycle through axes
 
     # init results if None, so only before first recursion
@@ -130,4 +145,3 @@ def knn2(root, point, k, axis=0, results=None):
         knn2(root=root.left, point=point, k=k, axis=axis + 1, results=results)
 
     return results
-

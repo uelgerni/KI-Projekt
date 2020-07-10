@@ -1,53 +1,63 @@
 from V4 import randomlySplitData, createD_i, classifyListComp, classifyPoint, dataBeautifier, sign
-from helperMethods import numpyReader, pandasPlotter
+from helperMethods import numpyReader, pandasPlotter, dataBeautifier, sortListByKey
 from KDTreeV2 import kdTree, knn
 import time
 import numpy as np
+from listKNN import listKNN
 import matplotlib.pyplot as plt
-
-filename = 'bananas-1-2d.train.csv'
-data = numpyReader(filename)
-splitData = randomlySplitData(data, 5)
-D_noI, D_i = createD_i(splitData, 3)
-tree = kdTree(data)
-
-
 
 '''
 just some tests
 '''
 
-'''
 
-'''
-def test1():
-    for i in range(100):
-        rando = np.random.randint(0, 5000)
-        p = np.array(data[rando])
-        classifiedPoint = classifyPoint(p, tree, 5)
-
-        plotData = pandasPlotter(filename)
-        # print(classiefiedPoints)
-        # print(dataBeautifier(classiefiedPoints)[0])
-
-        pNearest = dataBeautifier(knn(tree, p, 5))[0]
-        xVals = pNearest[:, 1]
-        yVals = pNearest[:, 2]
-        cmap = ['black' for val in pNearest[:, 0]]
-        cmap2 = ['r' if val == -1 else 'blue' for val in pNearest[:, 0]]  # else 'b']
-
-        plotData.plot.scatter(x='dim1', y='dim2', c='Colour', s=15)
-        plt.xlim((p[1] - .03, p[1] + .03))
-        plt.ylim((p[2] - .03, p[2] + .03))
-        pcol = 'r' if p[0] == -1 else 'blue'
-        plt.scatter(x=p[1], y=p[2], c=pcol, s=100)
-        pguessedcol = 'r' if sign(dataBeautifier(knn(tree, p, 5))[0]) == -1 else 'blue'
-        plt.scatter(x=p[1], y=p[2], c=pcol, s=10)
-
-        plt.scatter(x=xVals, y=yVals, c=cmap, s=50)
-        plt.scatter(x=xVals, y=yVals, c=cmap2, s=10)
-        plt.savefig('pictures/{}'.format(i))
-        plt.close()
+def buildTreeandD_i(filename):
+    data = numpyReader(filename)
+    splitData = randomlySplitData(data, 5)
+    D_noI, D_i = createD_i(splitData, 3)
+    tree = kdTree(D_noI)
+    return D_i, tree
 
 
-#test1()
+def classifyList2d(k):
+    filename = 'bananas-1-2d'
+    t1 = time.time()
+    D_i, tree = buildTreeandD_i(filename)
+    t2 = time.time()
+    result = classifyListComp(D_i, tree, k)
+    t3 = time.time()
+    print("building and splitting the tree took ", t2 - t1, " seconds")
+    print("classifying took ", t3 - t2, " seconds")
+    return result
+
+
+def classifyList10d(k):
+    filename = 'toy-10d'
+    D_i, tree = buildTreeandD_i(filename)
+    result = classifyListComp(D_i, tree, k)
+    return result
+
+
+def testKNNKD_10d():
+    filename = 'toy-10d'
+    data = numpyReader(filename)[1:]
+    tree = kdTree(data)
+    testPoint = data[0]
+    KNN = np.array(knn(tree, testPoint, 100))[:, 0]  # distances
+    KNN2 = listKNN(data, testPoint, 100)[1]  # distances
+    return all(KNN - KNN2 < 0.0001)
+
+
+def errorRate(classifiedList, k):
+    n = len(classifiedList)
+    results, actualValue = dataBeautifier(classifiedList)[1], dataBeautifier(classifiedList)[0][:, 0]
+    return np.sum(results != actualValue) / n, k
+
+
+t1 = time.time()
+ourList = classifyList10d()
+testStuffy, testStuffy2 = dataBeautifier(ourList)[1], dataBeautifier(ourList)[0][:, 0]
+
+print("knn not broken yet: ", testKNNKD_10d())
+
+print("Test took ", time.time() - t1, " seconds")
