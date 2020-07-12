@@ -1,5 +1,5 @@
 import numpy as np
-from KDTreeV2 import knn
+from KDTree import knn
 from helperMethods import dataBeautifier
 
 '''
@@ -52,7 +52,7 @@ def createD_i(listOfData, i):
 '''
 given a point, a kdTree and a number k classifies the point according to the sign of the k nearest neighbours
 
-returns the point and the classification € {-1,1}
+returns the point and the classification -1 or 1
 '''
 
 
@@ -70,7 +70,6 @@ same but from knn instead of k
 
 def classifyPointFromKNN(point, knn):
     kNN = dataBeautifier(knn)[0]
-
     classification = sign(kNN)
     return classification, point
 

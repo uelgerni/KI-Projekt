@@ -1,7 +1,7 @@
 from kDKNN import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN
 from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
     testIntUserInput
-from KDTreeV2 import kdTree, knn
+from KDTree import kdTree, knn
 import time
 import numpy as np
 import os
@@ -66,9 +66,14 @@ def testData(name, k):
     data = numpyTestData(name)
     tree = kdTree(data)
     # searches for k + 1 nearest neighbours and ignores closest, since closest is the point itself
+    t1 = time.time()
     kNNList = np.array([np.array(knn(tree, point, k + 1)) for point in data])[:, 1:]
+    t2 = time.time()
     # classifies data accordingly and casts to ndarray
     testResults = np.array(classifyListCompFromKNN(data, kNNList))
+    t3 = time.time()
+    print("get knn list", t2-t1)
+    print("classify data", t3-t2)
 
     # saves classification and coordinates of points together
     csvResults = np.c_[testResults[:, 0].astype(int), data[:, 1:-1]]

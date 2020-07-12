@@ -7,11 +7,12 @@ python file for our "helper functions" so our other methods and files aren't too
 '''
 
 
-# calculates euclidean distance between two points, ignoring the first entry
+# calculates euclidean distance between two points, ignoring the first and last entry (flag and key
+# and not taking the root since the root is monotone anyways
 def distance(p1, p2):
     usefulP1 = p1[1:-1]
     usefulP2 = p2[1:-1]
-    return np.linalg.norm(usefulP1 - usefulP2)
+    return sum((usefulP1 - usefulP2) ** 2)
 
 
 # function to read our data and add keys
