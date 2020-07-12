@@ -1,9 +1,16 @@
 import numpy as np
-from KDTreeV2 import kdTree, knn, knn2
+from KDTreeV2 import knn
 from helperMethods import dataBeautifier
 
 '''
-calculates the "average sign" of data, according to what we should do
+our classification functions for points and lists of points
+
+for classifying from the number k or classifying from the actual k nearest neigbours
+also for classifying using only i <= k of the k nearest neighbours 
+'''
+
+'''
+calculates the "average sign" of data, if sign == 0 chooses nearest neighbour instead
 '''
 
 
@@ -63,6 +70,7 @@ same but from knn instead of k
 
 def classifyPointFromKNN(point, knn):
     kNN = dataBeautifier(knn)[0]
+
     classification = sign(kNN)
     return classification, point
 

@@ -1,9 +1,13 @@
 from kDKNN import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN
-from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData
+from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
+    testIntUserInput
 from KDTreeV2 import kdTree, knn
 import time
 import numpy as np
 import os
+import warnings
+# supress deprecated warnings from terminal output
+warnings.filterwarnings("ignore")
 
 '''
 takes a classification which includes chosen values, actual values and of course the points themselves
@@ -25,13 +29,13 @@ finds k* using our train data
 
 def trainData(maxK, blockNum, name):
     data = numpyTrainingData(name)
-    splittedData = randomlySplitData(data, blockNum)
+    splitData = randomlySplitData(data, blockNum)
     errorRateListSum = [0] * maxK
     # for i = 0, .. L-1 build our sample and tree from rest of training data
     # also build our knn for each point in our sample D_i
     for lval in range(blockNum):
 
-        dnoi, di = createD_i(splittedData, lval)
+        dnoi, di = createD_i(splitData, lval)
         tree = kdTree(dnoi)
         kNNList = np.array([np.array(knn(tree, point, maxK)) for point in di])
 
@@ -39,8 +43,8 @@ def trainData(maxK, blockNum, name):
 
         # for each k in KSET = (1, ..., maxK) check our error rate and sum it up
         for i in range(1, maxK + 1):
-            testresults = classifyListiNNfromKNN(di, kNNList, i)
-            errorrate = errorRate(testresults, i)
+            testResults = classifyListiNNfromKNN(di, kNNList, i)
+            errorrate = errorRate(testResults, i)
             errorrateList[i - 1] = errorrate
             errorRateListSum[i - 1] += errorrate[0]
 
@@ -59,10 +63,10 @@ saves result in ./results/name.results.csv
 
 def testData(name, k):
     # builds tree from data, finds k nearest neighbours for all points in data
-    data = numpyTestData(filename)
+    data = numpyTestData(name)
     tree = kdTree(data)
-    kNNList = np.array([np.array(knn(tree, point, k)) for point in data])
-
+    # searches for k + 1 nearest neighbours and ignores closest, since closest is the point itself
+    kNNList = np.array([np.array(knn(tree, point, k + 1)) for point in data])[:, 1:]
     # classifies data accordingly and casts to ndarray
     testResults = np.array(classifyListCompFromKNN(data, kNNList))
 
@@ -72,9 +76,11 @@ def testData(name, k):
     # saves results with at most 1 trailing zero for a prettier csv
     formatList = ['%4d']
     formatList.extend(['%1.7f'] * (data.shape[1] - 2))
+
     # make dir results if not exists
     if not os.path.exists('results'):
         os.mkdir('results')
+
     # save results as csv
     np.savetxt("results/{}.results.csv".format(name), csvResults, delimiter=', ', fmt=formatList)
 
@@ -93,13 +99,16 @@ def classify(name, maxK, blockNum=5):
     print("Testing our data took {:1.3f} seconds".format(time.time() - t2))
 
 
-t1 = time.time()
-testK = 20
-testL = 5
-filename = 'bananas-1-2d'
-# filename = 'toy-10d'
-print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
+def main():
+    listData()
+    filename = readAndTestFilename()
+    testK = testIntUserInput('Please choose a maximum value for k:')
+    testL = testIntUserInput('please choose a number of partitions for our training data, 5 is suggested:')
+    print("")
+    t1 = time.time()
+    print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
+    classify(filename, testK, testL)
+    print("Total runtime was {:1.3f} seconds".format(time.time() - t1))
 
-classify(filename, testK, testL)
 
-print("Total runtime was {:1.3f} seconds".format(time.time() - t1))
+main()

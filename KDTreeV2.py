@@ -39,26 +39,34 @@ class Node(namedtuple('Node', 'value left right boundingBox')):
         return self.left is None and self.right is None
 
 
+'''
+recursively creates kd tree from input data
+'''
+
+
 def kdTree(data, depth=0, boundingBox=None):
     boundingBox = computeBB(data) if boundingBox is None else boundingBox
     n = len(data)
+    # if node is not leaf
     if n > 1:
         half = n // 2
         dim = len(data[0]) - 2  # flag and key
         axis = depth % dim
         sortedData = data[data[:, axis + 1].argsort(kind='mergesort')]
         value = sortedData[half]
+        # creates bounding boxes for left and right child tree
         leftBB = boundingBox.copy()
         rightBB = boundingBox.copy()
         leftBB[1, axis] = value[axis + 1]
         rightBB[0, axis] = value[axis + 1]
-
+        # recursively create children
         return Node(
             value=value,
             left=kdTree(data=sortedData[:half], depth=depth + 1, boundingBox=leftBB),
             right=kdTree(data=sortedData[half + 1:], depth=depth + 1, boundingBox=rightBB),
             boundingBox=boundingBox
         )
+    # base case for leaves
     elif n == 1:
         return Node(
             value=data[0],
@@ -66,6 +74,13 @@ def kdTree(data, depth=0, boundingBox=None):
             right=None,
             boundingBox=boundingBox
         )
+
+
+'''
+recursive knn search for kd trees
+
+only searches paths where closer nodes could possibly be
+'''
 
 
 def knn(root, point, k, axis=0, results=None):

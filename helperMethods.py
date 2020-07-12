@@ -1,9 +1,9 @@
 import numpy as np
 import pandas as pd
-import time
+import os
 
 '''
-python file for our "helper functions" so for example kdtree.py is not too cluttered
+python file for our "helper functions" so our other methods and files aren't too cluttered
 '''
 
 
@@ -64,3 +64,49 @@ sorts matrix by last column
 def sortListByKey(listToSort):
     sortedList = listToSort[dataBeautifier(listToSort)[0][:, -1].argsort()]
     return sortedList
+
+
+'''
+lists all training files in ./data directory
+'''
+
+
+def listData():
+    for file in os.listdir('data'):
+        if file.endswith('train.csv'):
+            print(file[:-10])
+
+
+'''
+reads a file name, checks if exists, if not reads a file name ...
+'''
+
+
+def readAndTestFilename():
+    while True:
+        filename = input('please choose one of the above files by typing its name:\n')
+        file = 'data/' + filename + '.train.csv'
+        if not os.path.isfile(file):
+            print('The file {} does not exist in the data directory, please try again with one of the above'.format(
+                filename))
+            continue
+        else:
+            break
+    return filename
+
+
+'''
+checks if user input is int, reads again until it is
+'''
+
+
+def testIntUserInput(prompt):
+    while True:
+        try:
+            number = int(input(prompt + '\n'))
+        except ValueError:
+            print('not an integer, try again')
+            continue
+        else:
+            break
+    return number
