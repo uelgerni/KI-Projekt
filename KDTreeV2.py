@@ -4,7 +4,7 @@ from collections import namedtuple
 import time
 from math import inf
 import heapq
-from helperMethods import distance, numpyReader
+from helperMethods import distance, numpyTrainingData
 
 
 # simple function that returns true if the hypersphere around a point intersects the hyperrectangle
@@ -128,7 +128,6 @@ def knn2(root, point, k, axis=0, results=None):
 
     # only go into trees where closer points could be
     if not intersects(point, -maxDistance, root.boundingBox):
-        print("skipped tree")
         return
     dist = distance(root.value, point)
     if dist > maxDistance:

@@ -15,12 +15,19 @@ def distance(p1, p2):
 
 
 # function to read our data and add keys
-def numpyReader(filename):
+def numpyTrainingData(filename):
     data = np.genfromtxt('./data/{}.train.csv'.format(filename), delimiter=',', dtype=float)
     keys = np.arange(len(data))
     keyedData = np.c_[data, keys]
     return keyedData
 
+
+# function to read our test data
+def numpyTestData(filename):
+    data = np.genfromtxt('./data/{}.test.csv'.format(filename), delimiter=',', dtype=float)
+    keys = np.arange(len(data))
+    keyedData = np.c_[data, keys]
+    return keyedData
 
 # same but as a dataframe, only needed for plotting 2d
 def pandasReader(filename):

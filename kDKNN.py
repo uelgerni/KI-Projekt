@@ -1,5 +1,5 @@
 import numpy as np
-from KDTreeV2 import kdTree, knn
+from KDTreeV2 import kdTree, knn, knn2
 from helperMethods import dataBeautifier
 
 '''
@@ -96,7 +96,7 @@ gets knn list but only uses nearest i neighbours
 
 def classifyPointiNNfromKNN(point, knn, i):
     kNN = dataBeautifier(knn)[0]
-    classification = sign(kNN[:i + 1])
+    classification = sign(kNN[:i])
     return classification, point
 
 

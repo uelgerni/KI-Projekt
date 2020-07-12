@@ -1,5 +1,5 @@
 import numpy as np
-from helperMethods import pandasReader, pandasPlotter, numpyReader, distance
+from helperMethods import pandasReader, pandasPlotter, numpyTrainingData, distance
 import time
 
 t1 = time.time()
