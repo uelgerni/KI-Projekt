@@ -3,6 +3,7 @@ from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData
 from KDTreeV2 import kdTree, knn
 import time
 import numpy as np
+import os
 
 '''
 takes a classification which includes chosen values, actual values and of course the points themselves
@@ -64,6 +65,8 @@ def testData(name, k):
     # saves results with at most 1 trailing zero for a prettier csv
     formatList = ['%4d']
     formatList.extend(['%1.7f'] * (data.shape[1] - 2))
+    if not os.path.exists('results'):
+        os.mkdir('results')
     np.savetxt("results/{}.results.csv".format(name), csvResults, delimiter=', ', fmt=formatList)
 
     # calculates error rate and prints it
@@ -85,7 +88,7 @@ t1 = time.time()
 testK = 20
 testL = 5
 filename = 'bananas-1-2d'
-# filename = 'toy-10d'
+filename = 'toy-10d'
 print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
 
 classify(filename, testK, testL)
