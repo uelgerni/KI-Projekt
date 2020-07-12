@@ -88,6 +88,6 @@ filename = 'bananas-1-2d'
 # filename = 'toy-10d'
 print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
 
-classify(filename, testK)
+classify(filename, testK, testL)
 
 print("Total runtime was {:1.3f} seconds".format(time.time() - t1))
