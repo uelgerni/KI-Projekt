@@ -88,7 +88,7 @@ t1 = time.time()
 testK = 20
 testL = 5
 filename = 'bananas-1-2d'
-filename = 'toy-10d'
+#filename = 'toy-10d'
 print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
 
 classify(filename, testK, testL)
