@@ -1,7 +1,6 @@
 import numpy as np
 from pprint import pformat
 from collections import namedtuple
-import time
 from math import inf
 import heapq
 from helperMethods import distance, numpyTrainingData
@@ -107,7 +106,7 @@ def knn(root, point, k, axis=0, results=None):
 
 
 '''
-uses heapq instead of sorting all the time, not really faster
+uses heapq instead of sorting all the time, not really faster, also not fixed for latest versions
 '''
 
 

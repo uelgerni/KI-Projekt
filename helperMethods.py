@@ -29,6 +29,7 @@ def numpyTestData(filename):
     keyedData = np.c_[data, keys]
     return keyedData
 
+
 # same but as a dataframe, only needed for plotting 2d
 def pandasReader(filename):
     dataframe = pd.read_csv('./data/{}.train.csv'.format(filename), header=None)
@@ -46,8 +47,18 @@ def pandasPlotter(filename):
     return dataframe
 
 
+'''
+just a little data beautification thats needed multiple times
+'''
+
+
 def dataBeautifier(data):
     return np.array(np.array(data)[:, 1].tolist()), np.array(np.array(data)[:, 0].tolist())
+
+
+'''
+sorts matrix by last column
+'''
 
 
 def sortListByKey(listToSort):

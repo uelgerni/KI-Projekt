@@ -50,6 +50,13 @@ def trainData(maxK, blockNum, name):
     return min(errorRateAVG, key=lambda x: x[0])
 
 
+'''
+tests data name.test.csv with given k
+prints error rate
+saves result in ./results/name.results.csv
+'''
+
+
 def testData(name, k):
     # builds tree from data, finds k nearest neighbours for all points in data
     data = numpyTestData(filename)
@@ -65,8 +72,10 @@ def testData(name, k):
     # saves results with at most 1 trailing zero for a prettier csv
     formatList = ['%4d']
     formatList.extend(['%1.7f'] * (data.shape[1] - 2))
+    # make dir results if not exists
     if not os.path.exists('results'):
         os.mkdir('results')
+    # save results as csv
     np.savetxt("results/{}.results.csv".format(name), csvResults, delimiter=', ', fmt=formatList)
 
     # calculates error rate and prints it
@@ -88,7 +97,7 @@ t1 = time.time()
 testK = 20
 testL = 5
 filename = 'bananas-1-2d'
-#filename = 'toy-10d'
+# filename = 'toy-10d'
 print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
 
 classify(filename, testK, testL)

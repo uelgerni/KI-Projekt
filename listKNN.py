@@ -1,8 +1,11 @@
 import numpy as np
-from helperMethods import pandasReader, pandasPlotter, numpyTrainingData, distance
+from helperMethods import distance
 import time
 
 t1 = time.time()
+'''
+this file is basically only to check if our kdtee KNN search works
+'''
 
 
 def listKNN(dataList, point, k):
