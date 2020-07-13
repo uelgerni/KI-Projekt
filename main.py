@@ -1,11 +1,13 @@
-from kDKNN import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN
+import os
+import time
+import warnings
+
+import numpy as np
+
+from KDTree import kdTree, knn
 from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
     testIntUserInput
-from KDTree import kdTree, knn
-import time
-import numpy as np
-import os
-import warnings
+from kDKNN import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
 
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
@@ -14,6 +16,8 @@ warnings.filterwarnings("ignore")
 takes a classification which includes chosen values, actual values and of course the points themselves
 also takes k just so it can give it back
 returns error rate and k
+
+used if you only have 1 k
 '''
 
 
@@ -24,6 +28,22 @@ def errorRate(classifiedList, k):
 
 
 '''
+takes a numpy array of classifications which includes chosen values and actual values for each point for all k's
+returns classification error rate for each k
+
+used if you have to test a lot of k's
+'''
+
+
+def errorRateList(classifiedList):
+    n = len(classifiedList)
+    pointList = np.array(classifiedList)
+    errorRateList = [np.sum(pointList[:, i][:, 0] != pointList[:, i][:, 1]) / n for i in
+                     range(len(pointList[0]))]
+    return np.array(errorRateList)
+
+
+'''
 finds k* using our train data
 '''
 
@@ -31,23 +51,16 @@ finds k* using our train data
 def trainData(maxK, blockNum, name):
     data = numpyTrainingData(name)
     splitData = randomlySplitData(data, blockNum)
-    errorRateListSum = [0] * maxK
-    # for i = 0, .. L-1 build our sample and tree from rest of training data
-    # also build our knn for each point in our sample D_i
-    for lval in range(blockNum):
+    errorRateListSum = np.zeros(maxK)
 
+    for lval in range(blockNum):
         dnoi, di = createD_i(splitData, lval)
         tree = kdTree(dnoi)
         kNNList = np.array([np.array(knn(tree, point, maxK)) for point in di])
+        classifiedList = classifyListiNNfromKNN2(di, kNNList)
 
-        errorrateList = [None] * maxK
-
-        # for each k in KSET = (1, ..., maxK) check our error rate and sum it up
-        for i in range(1, maxK + 1):
-            testResults = classifyListiNNfromKNN(di, kNNList, i)
-            errorrate = errorRate(testResults, i)
-            errorrateList[i - 1] = errorrate
-            errorRateListSum[i - 1] += errorrate[0]
+        errorrateList = errorRateList(classifiedList)
+        errorRateListSum = errorRateListSum + errorrateList
 
     # get avg error over i = 0...L-1 for each k
     errorRateAVG = [(errorRateListSum[i] / blockNum, i + 1) for i in range(len(errorRateListSum))]
