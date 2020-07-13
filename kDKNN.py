@@ -1,5 +1,7 @@
+# coding: utf-8
 import numpy as np
 from KDTree import knn
+
 from helperMethods import dataBeautifier
 
 '''

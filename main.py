@@ -6,6 +6,7 @@ import time
 import numpy as np
 import os
 import warnings
+
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
 
@@ -65,15 +66,12 @@ def testData(name, k):
     # builds tree from data, finds k nearest neighbours for all points in data
     data = numpyTestData(name)
     tree = kdTree(data)
+
     # searches for k + 1 nearest neighbours and ignores closest, since closest is the point itself
-    t1 = time.time()
     kNNList = np.array([np.array(knn(tree, point, k + 1)) for point in data])[:, 1:]
-    t2 = time.time()
+
     # classifies data accordingly and casts to ndarray
     testResults = np.array(classifyListCompFromKNN(data, kNNList))
-    t3 = time.time()
-    print("get knn list", t2-t1)
-    print("classify data", t3-t2)
 
     # saves classification and coordinates of points together
     csvResults = np.c_[testResults[:, 0].astype(int), data[:, 1:-1]]
