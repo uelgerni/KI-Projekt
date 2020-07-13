@@ -1,7 +1,9 @@
 # coding: utf-8
-import numpy as np
-from KDTree import knn
+from time import time
 
+import numpy as np
+
+from KDTree import knn
 from helperMethods import dataBeautifier
 
 '''
@@ -109,6 +111,12 @@ def classifyPointiNNfromKNN(point, knn, i):
     return classification, point
 
 
+def classifyPointiNNfromKNN2(point, knn):
+    kNN = dataBeautifier(knn)[0]
+    classification = np.array([(sign(kNN[:i]), point[0]) for i in range(1, len(kNN) + 1)])
+    return classification
+
+
 '''
 list comprehension version for nearest i from k neighbours 
 '''
@@ -116,5 +124,14 @@ list comprehension version for nearest i from k neighbours
 
 def classifyListiNNfromKNN(sample, knnList, i):
     workingList = [(sample[j], knnList[j]) for j in range(sample.shape[0])]
+    t = time()
+
     resultList = [classifyPointiNNfromKNN(point, knn, i) for point, knn in workingList]
+    print("resultlist took {:1.3f} seconds to create".format(time() - t))
+    return resultList
+
+
+def classifyListiNNfromKNN2(sample, knnList):
+    workingList = [(sample[j], knnList[j]) for j in range(sample.shape[0])]
+    resultList = [classifyPointiNNfromKNN2(point, knn) for point, knn in workingList]
     return resultList

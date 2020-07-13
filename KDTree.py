@@ -1,9 +1,11 @@
-import numpy as np
-from pprint import pformat
+import heapq
 from collections import namedtuple
 from math import inf
-import heapq
-from helperMethods import distance, numpyTrainingData
+from pprint import pformat
+
+import numpy as np
+
+from helperMethods import distance
 
 
 # simple function that returns true if the hypersphere around a point intersects the hyperrectangle

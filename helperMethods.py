@@ -1,6 +1,7 @@
+import os
+
 import numpy as np
 import pandas as pd
-import os
 
 '''
 python file for our "helper functions" so our other methods and files aren't too cluttered

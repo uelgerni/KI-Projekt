@@ -1,6 +1,8 @@
-import numpy as np
-from helperMethods import distance
 import time
+
+import numpy as np
+
+from helperMethods import distance
 
 t1 = time.time()
 '''
