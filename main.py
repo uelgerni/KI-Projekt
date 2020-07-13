@@ -7,7 +7,7 @@ import numpy as np
 from KDTree import kdTree, knn
 from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
     testIntUserInput
-from kDKNN import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
+from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
 
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
