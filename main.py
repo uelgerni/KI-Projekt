@@ -5,9 +5,9 @@ import warnings
 import numpy as np
 
 from KDTree import kdTree, knn
+from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
 from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
     testIntUserInput
-from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
 
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
@@ -24,6 +24,8 @@ used if you only have 1 k
 def errorRate(classifiedList, k):
     n = len(classifiedList)
     results, actualValue = dataBeautifier(classifiedList)[1], dataBeautifier(classifiedList)[0][:, 0]
+    # print("results", results)
+    # print("actualvalue", actualValue)
     return np.sum(results != actualValue) / n, k
 
 
@@ -64,6 +66,8 @@ def trainData(maxK, blockNum, name):
 
     # get avg error over i = 0...L-1 for each k
     errorRateAVG = [(errorRateListSum[i] / blockNum, i + 1) for i in range(len(errorRateListSum))]
+    # save error for all k for graphic interpretations
+    # np.savetxt("{}.errorAVG.csv".format(name),np.array(errorRateAVG))
     # return minimum avg error and corresponding k
     return min(errorRateAVG, key=lambda x: x[0])
 
@@ -88,6 +92,8 @@ def testData(name, k):
 
     # saves classification and coordinates of points together
     csvResults = np.c_[testResults[:, 0].astype(int), data[:, 1:-1]]
+    # results including old classification for graphic interpretation
+    # graphicResults = np.c_[testResults[:, 0].astype(int), data[:,:-1]]
 
     # saves results with at most 1 trailing zero for a prettier csv
     formatList = ['%4d']
@@ -99,6 +105,9 @@ def testData(name, k):
 
     # save results as csv
     np.savetxt("results/{}.results.csv".format(name), csvResults, delimiter=', ', fmt=formatList)
+    # extend formatlist for graphic results and save those results
+    # formatList.extend(['%1.7f'])
+    # np.savetxt("{}.graphicresults.csv".format(name), graphicResults, delimiter=', ', fmt=formatList)
 
     # calculates error rate and prints it
     error = errorRate(testResults, k)
