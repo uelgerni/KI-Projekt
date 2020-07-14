@@ -24,8 +24,6 @@ used if you only have 1 k
 def errorRate(classifiedList, k):
     n = len(classifiedList)
     results, actualValue = dataBeautifier(classifiedList)[1], dataBeautifier(classifiedList)[0][:, 0]
-    # print("results", results)
-    # print("actualvalue", actualValue)
     return np.sum(results != actualValue) / n, k
 
 
