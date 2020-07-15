@@ -2,25 +2,27 @@ import os
 
 import numpy as np
 import pandas as pd
-
+import time
 '''
 python file for our "helper functions" so our other methods and files aren't too cluttered
 '''
 
 
 # calculates euclidean distance between two points, ignoring the first and last entry (flag and key
-# and not taking the root since the root is monotone anyways
+# and not taking the root since the root is monotone anyways HAHAHAH JUST KIDDING IT WONT WORK THAT WAY :))
 def distance(p1, p2):
     usefulP1 = p1[1:-1]
     usefulP2 = p2[1:-1]
-    return sum((usefulP1 - usefulP2) ** 2)
+    return np.sqrt(sum((usefulP1 - usefulP2) ** 2))
 
 
 # function to read our data and add keys
 def numpyTrainingData(filename):
     data = np.genfromtxt('./data/{}.train.csv'.format(filename), delimiter=',', dtype=float)
     keys = np.arange(len(data))
+    t = time.time()
     keyedData = np.c_[data, keys]
+
     return keyedData
 
 
