@@ -2,7 +2,6 @@
 
 import numpy as np
 
-from KDTree import knn
 from helperMethods import dataBeautifier
 
 '''
@@ -20,6 +19,37 @@ calculates the "average sign" of data, if sign == 0 chooses nearest neighbour in
 def sign(neighbours):
     signum = sum(neighbours[:, 0])
     return 1 if signum == 0 else signum / abs(signum)
+
+
+'''
+takes a classification which includes chosen values, actual values and of course the points themselves
+also takes k just so it can give it back
+returns error rate and k
+
+used if you only have 1 k
+'''
+
+
+def errorRate(classifiedList, k):
+    n = len(classifiedList)
+    results, actualValue = dataBeautifier(classifiedList)[1], dataBeautifier(classifiedList)[0][:, 0]
+    return np.sum(results != actualValue) / n, k
+
+
+'''
+takes a numpy array of classifications which includes chosen values and actual values for each point for all k's
+returns classification error rate for each k
+
+used if you have to test a lot of k's
+'''
+
+
+def errorRateList(classifiedList):
+    n = len(classifiedList)
+    pointList = np.array(classifiedList)
+    errorRateList = [np.sum(pointList[:, i][:, 0] != pointList[:, i][:, 1]) / n for i in
+                     range(len(pointList[0]))]
+    return np.array(errorRateList)
 
 
 '''
@@ -58,14 +88,6 @@ given a point, a kdTree and a number k classifies the point according to the sig
 returns the point and the classification -1 or 1
 '''
 
-
-def classifyPoint(point, tree, k):
-    kNN = knn(tree, point, k)
-    kNN = dataBeautifier(kNN)[0]
-    classification = sign(kNN)
-    return classification, point
-
-
 '''
 same but from knn instead of k
 '''
@@ -81,12 +103,6 @@ def classifyPointFromKNN(point, knn):
 classifies an array of points using list comprehension and classifiyPoint
 returns a list of tuples (point, classification € {-1,1}) 
 '''
-
-
-def classifyListComp(sample, tree, k):
-    resultList = [classifyPoint(point, tree, k) for point in sample]
-    return np.array(resultList)
-
 
 '''
 does the same but expects knn and not k 
@@ -104,12 +120,6 @@ gets knn list but only uses nearest i neighbours
 '''
 
 
-def classifyPointiNNfromKNN(point, knn, i):
-    kNN = dataBeautifier(knn)[0]
-    classification = sign(kNN[:i])
-    return classification, point
-
-
 def classifyPointiNNfromKNN2(point, knn):
     kNN = dataBeautifier(knn)[0]
     classification = np.array([(sign(kNN[:i]), point[0]) for i in range(1, len(kNN) + 1)])
@@ -119,12 +129,6 @@ def classifyPointiNNfromKNN2(point, knn):
 '''
 list comprehension version for nearest i from k neighbours 
 '''
-
-
-def classifyListiNNfromKNN(sample, knnList, i):
-    workingList = [(sample[j], knnList[j]) for j in range(sample.shape[0])]
-    resultList = [classifyPointiNNfromKNN(point, knn, i) for point, knn in workingList]
-    return resultList
 
 
 def classifyListiNNfromKNN2(sample, knnList):

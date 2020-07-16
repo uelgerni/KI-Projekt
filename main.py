@@ -5,43 +5,13 @@ import warnings
 import numpy as np
 
 from KDTree import kdTree, knn
-from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2
-from helperMethods import numpyTrainingData, dataBeautifier, numpyTestData, listData, readAndTestFilename, \
+from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2, errorRate, \
+    errorRateList
+from helperMethods import numpyTrainingData, numpyTestData, listData, readAndTestFilename, \
     testIntUserInput
 
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
-
-'''
-takes a classification which includes chosen values, actual values and of course the points themselves
-also takes k just so it can give it back
-returns error rate and k
-
-used if you only have 1 k
-'''
-
-
-def errorRate(classifiedList, k):
-    n = len(classifiedList)
-    results, actualValue = dataBeautifier(classifiedList)[1], dataBeautifier(classifiedList)[0][:, 0]
-    return np.sum(results != actualValue) / n, k
-
-
-'''
-takes a numpy array of classifications which includes chosen values and actual values for each point for all k's
-returns classification error rate for each k
-
-used if you have to test a lot of k's
-'''
-
-
-def errorRateList(classifiedList):
-    n = len(classifiedList)
-    pointList = np.array(classifiedList)
-    errorRateList = [np.sum(pointList[:, i][:, 0] != pointList[:, i][:, 1]) / n for i in
-                     range(len(pointList[0]))]
-    return np.array(errorRateList)
-
 
 '''
 finds k* using our train data

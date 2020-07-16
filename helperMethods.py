@@ -1,8 +1,9 @@
 import os
+from math import sqrt
 
 import numpy as np
 import pandas as pd
-from math import sqrt
+
 '''
 python file for our "helper functions" so our other methods and files aren't too cluttered
 '''
@@ -13,11 +14,7 @@ python file for our "helper functions" so our other methods and files aren't too
 def distance(p1, p2):
     usefulP1 = p1[1:-1]
     usefulP2 = p2[1:-1]
-    # times are for bananas-1-2d, i<=5, k <= 20
-    return sqrt(sum((usefulP1 - usefulP2) ** 2)) # 19 sec
-    # return np.linalg.norm(usefulP1-usefulP2) # 24 sec
-    # return np.sqrt(np.sum((usefulP1 - usefulP2) ** 2)) 28 sec
-    # return sqrt(np.sum((usefulP1 - usefulP2) ** 2)) # 24 sec
+    return sqrt(sum((usefulP1 - usefulP2) ** 2))  # 19 sec
 
 
 # function to read our data and add keys
@@ -61,16 +58,6 @@ just a little data beautification thats needed multiple times
 
 def dataBeautifier(data):
     return np.array(np.array(data)[:, 1].tolist()), np.array(np.array(data)[:, 0].tolist())
-
-
-'''
-sorts matrix by last column
-'''
-
-
-def sortListByKey(listToSort):
-    sortedList = listToSort[dataBeautifier(listToSort)[0][:, -1].argsort()]
-    return sortedList
 
 
 '''

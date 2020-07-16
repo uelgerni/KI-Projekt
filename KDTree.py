@@ -92,7 +92,6 @@ def knn(root, point, k, axis=0, results=None):
     # init results if None, so only before first recursion
     if results is None:
         results = [(inf, inf)] * k
-        heapq.heapify(results)
         maxDistance = inf
     else:
         maxDistance = results[-1][0]

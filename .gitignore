@@ -1,2 +1,13 @@
 venv/
 /results/
+/.idea/.gitignore
+/bananas-1-2d.errorAVG.csv
+/bananas-1-2d.graphicresults.csv
+/bananas-2-2d.graphicresults.csv
+/.idea/knearest.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/tests.py
+/.idea/vcs.xml
