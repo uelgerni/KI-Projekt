@@ -1,0 +1,4 @@
+\babel@toc {ngerman}{}
+\beamer@sectionintoc {1}{Aufgabenstellung}{2}{0}{1}
+\beamer@sectionintoc {2}{Verfahren}{3}{0}{2}
+\beamer@sectionintoc {3}{Code}{9}{0}{3}

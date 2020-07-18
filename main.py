@@ -100,7 +100,7 @@ def main():
     print("")
     t1 = time.time()
     print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
-    classify(filename, testK, testL)
+    graphicResults,errorAVG = classify(filename, testK, testL)
     print("Total runtime was {:1.3f} seconds".format(time.time() - t1))
 
 

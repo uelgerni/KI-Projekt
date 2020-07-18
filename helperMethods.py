@@ -3,6 +3,7 @@ from math import sqrt
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 '''
 python file for our "helper functions" so our other methods and files aren't too cluttered
@@ -104,3 +105,57 @@ def testIntUserInput(prompt):
         else:
             break
     return number
+
+
+'''
+
+function to plot the results
+'''
+
+
+def plotErrorRate(errorAVG,graphicResults):
+    if np.shape(graphicResults)[1] < 3:
+        
+        fig = plt.figure(figsize = (13,8),dpi = 300)
+        ax1 = fig.add_subplot(1,2,1)
+        ax2 = fig.add_subplot(1,2,2)
+        ax1.plot(errorAVG[:,1],errorAVG[:,0]*100)
+        originalGR = graphicResults[np.argsort(graphicResults[:,1])]
+        classifiedGR= graphicResults[np.argsort(graphicResults[:,0])]
+        ax2.scatter(classifiedGR[0:(np.argmax(classifiedGR[:,0])-1),2],classifiedGR[0:(np.argmax(classifiedGR[:,0])-1),3],s = 2,facecolor= 'blue')
+        ax2.scatter(classifiedGR[np.argmax(classifiedGR[:,0]):-1,2],classifiedGR[np.argmax(classifiedGR[:,0]):-1,3], s = 2,facecolor='red' )
+        ax2.scatter(originalGR[0:(np.argmax(originalGR[:,1])-1),2],originalGR[0:(np.argmax(originalGR[:,1])-1),3],s= 0.25,facecolor = 'blue')
+        ax2.scatter(originalGR[np.argmax(originalGR[:,1]):-1,2],originalGR[np.argmax(originalGR[:,1]):-1,3],s = 0.25,facecolor='red')
+        ax1.set_title('plotted average error')
+        ax2.set_title('classification')
+        ax1.set_xlabel('k')
+        ax1.set_ylabel('error rate average in %')
+        ax2.set_xlabel('x-Axis')
+        ax2.set_ylabel('y-Axis')
+        ax2.legend(' classified blue ','original red')
+        
+        def zoomin(event):
+            
+            if event.button != 1:
+                return               
+            x, y = event.xdata, event.ydata
+            length = ax2.get_xlim()[1]-ax2.get_xlim()[0]
+            ax2.set_xlim(x - length*0.2, x + length*0.2)
+            ax2.set_ylim(y - length*0.2, y + length*0.2)
+            
+            fig.canvas.draw()
+            
+            def zoomout(event):
+                if event.button != 3 :
+                    return
+                x, y = event.xdata, event.ydata
+                length = ax2.get_xlim()[1]-ax2.get_xlim()[0]
+                ax2.set_xlim(x - length*0.8, x + length*0.8)
+                ax2.set_ylim(y - length*0.8, y + length*0.8)
+                fig.canvas.draw()        
+                
+                fig.canvas.mpl_connect('button_press_event', zoomin)
+                fig.canvas.mpl_connect('button_press_event', zoomout)
+                
+                
+        plt.show()
