@@ -4,7 +4,12 @@ from math import sqrt
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sklearn
+import time
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
 
+import numpy as np
 '''
 python file for our "helper functions" so our other methods and files aren't too cluttered
 '''
@@ -114,7 +119,7 @@ function to plot the results
 
 
 def plotErrorRate(errorAVG,graphicResults):
-    if np.shape(graphicResults)[1] < 3:
+    if np.shape(graphicResults)[1] < 5:
         
         fig = plt.figure(figsize = (13,8),dpi = 300)
         ax1 = fig.add_subplot(1,2,1)
@@ -157,5 +162,28 @@ def plotErrorRate(errorAVG,graphicResults):
                 fig.canvas.mpl_connect('button_press_event', zoomin)
                 fig.canvas.mpl_connect('button_press_event', zoomout)
                 
-                
+            
         plt.show()
+
+
+
+
+
+
+'''
+function to compare our accuracy rate and running time with scikits naive bayes
+'''
+
+
+def compare(data,test):
+    t1  = time.time()
+    gnb = GaussianNB()
+
+    model = gnb.fit(data[:,1:-1], data[:,0])
+
+    preds = gnb.predict(test[:,1:-1])
+    print("The accuracy score is: {:1.3f}%".format(accuracy_score(test[:,0],preds)*100))
+    print("Scikits total runtime was {:1.3f} seconds".format(time.time() - t1))
+    
+    
+    

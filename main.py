@@ -8,7 +8,7 @@ from KDTree import kdTree, knn
 from classification import randomlySplitData, createD_i, classifyListCompFromKNN, classifyListiNNfromKNN2, errorRate, \
     errorRateList
 from helperMethods import numpyTrainingData, numpyTestData, listData, readAndTestFilename, \
-    testIntUserInput
+    testIntUserInput, compare, plotErrorRate
 
 # supress deprecated warnings from terminal output
 warnings.filterwarnings("ignore")
@@ -37,7 +37,7 @@ def trainData(maxK, blockNum, name):
     # save error for all k for graphic interpretations
     # np.savetxt("{}.errorAVG.csv".format(name),np.array(errorRateAVG))
     # return minimum avg error and corresponding k
-    return min(errorRateAVG, key=lambda x: x[0])
+    return min(errorRateAVG, key=lambda x: x[0]), np.asarray(errorRateAVG)
 
 
 '''
@@ -61,7 +61,7 @@ def testData(name, k):
     # saves classification and coordinates of points together
     csvResults = np.c_[testResults[:, 0].astype(int), data[:, 1:-1]]
     # results including old classification for graphic interpretation
-    # graphicResults = np.c_[testResults[:, 0].astype(int), data[:,:-1]]
+    graphicResults = np.c_[testResults[:, 0].astype(int), data[:,:-1]]
 
     # saves results with at most 1 trailing zero for a prettier csv
     formatList = ['%4d']
@@ -80,28 +80,34 @@ def testData(name, k):
     # calculates error rate and prints it
     error = errorRate(testResults, k)
     print("The error rate is: {:1.3f}%".format(error[0] * 100))
-
+    return graphicResults
 
 def classify(name, maxK, blockNum=5):
     t1 = time.time()
-    k_star = trainData(maxK=maxK, name=name, blockNum=blockNum)[1]
+    k_star = trainData(maxK=maxK, name=name, blockNum=blockNum)[0][1]
+    errorAVG = trainData(maxK=maxK, name=name, blockNum=blockNum)[1]
     print("k* chosen is:", k_star)
     print("Choosing k* took {:1.3f} seconds.".format(time.time() - t1))
     t2 = time.time()
-    testData(name=name, k=k_star)
+    graphicResults = testData(name=name, k=k_star)
     print("Testing our data took {:1.3f} seconds".format(time.time() - t2))
+    return graphicResults, errorAVG
 
 
 def main():
     listData()
     filename = readAndTestFilename()
+    data = numpyTrainingData(filename)
+    test = numpyTestData(filename)
     testK = testIntUserInput('Please choose a maximum value for k:')
     testL = testIntUserInput('please choose a number of partitions for our training data, 5 is suggested:')
     print("")
     t1 = time.time()
     print("testing for k <= {} and i <= {} and data {}".format(testK, testL, filename))
     graphicResults,errorAVG = classify(filename, testK, testL)
-    print("Total runtime was {:1.3f} seconds".format(time.time() - t1))
-
+    print(np.shape(graphicResults)[1])
+    plotErrorRate(errorAVG,graphicResults)
+    print("Our code's total runtime was {:1.3f} seconds".format(time.time() - t1))
+    compare(data, test)
 
 main()
