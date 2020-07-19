@@ -1,4 +1,5 @@
 import timeit
-import numpy as np
-
+# suppress runtime warning
+import warnings
+warnings.filterwarnings("ignore")
 cy = timeit.timeit('main',setup='import main',number=1)
