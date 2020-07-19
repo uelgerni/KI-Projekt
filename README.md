@@ -1,5 +1,3 @@
-# KI-Projekt
-if still needed:
-python3 setup.py build_ext
-
-python3 testing.py
+# KI-Projekt in cython
+just run
+python3 main.py
