@@ -14,7 +14,8 @@ python file for our "helper functions" so our other methods and files aren't too
 def distance(p1, p2):
     usefulP1 = p1[1:-1]
     usefulP2 = p2[1:-1]
-    return sqrt(sum((usefulP1 - usefulP2) ** 2))  # 19 sec
+    return np.sqrt(np.sum(usefulP1-usefulP2)**2) # for high dim data
+   # return sqrt(sum((usefulP1 - usefulP2) ** 2))  # for low dim data
 
 
 # function to read our data and add keys
